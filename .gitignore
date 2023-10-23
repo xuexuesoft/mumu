@@ -1,0 +1,11 @@
+.DS_Store
+/debug
+
+/build
+/test_package/build
+
+/external/box2d
+/external/googletest
+
+/CMakeUserPresets.json
+/test_package/CMakeUserPresets.json

@@ -1,0 +1,53 @@
+if (CMAKE_VERSION VERSION_LESS 2.8.9)
+    message(FATAL_ERROR "xuexue requires at least CMake version 2.8.9")
+endif()
+
+if (NOT xuexue_FIND_COMPONENTS)
+    set(xuexue_NOT_FOUND_MESSAGE "The xuexue package requires at least one component")
+    set(xuexue_FOUND False)
+    return()
+endif()
+
+set(_xuexue_FIND_PARTS_REQUIRED)
+if (xuexue_FIND_REQUIRED)
+    set(_xuexue_FIND_PARTS_REQUIRED REQUIRED)
+endif()
+set(_xuexue_FIND_PARTS_QUIET)
+if (xuexue_FIND_QUIETLY)
+    set(_xuexue_FIND_PARTS_QUIET QUIET)
+endif()
+
+get_filename_component(_xuexue_install_prefix "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
+
+set(_xuexue_NOTFOUND_MESSAGE)
+
+# Let components find each other, but don't overwrite CMAKE_PREFIX_PATH
+set(_xuexue_CMAKE_PREFIX_PATH_old ${CMAKE_PREFIX_PATH})
+set(CMAKE_PREFIX_PATH ${_xuexue_install_prefix})
+
+foreach(module ${xuexue_FIND_COMPONENTS})
+    find_package(xuexue${module}
+        ${_xuexue_FIND_PARTS_QUIET}
+        ${_xuexue_FIND_PARTS_REQUIRED}
+        PATHS "${_xuexue_install_prefix}" NO_DEFAULT_PATH
+    )
+    if (NOT xuexue${module}_FOUND)
+        if (xuexue_FIND_REQUIRED_${module})
+            set(_xuexue_NOTFOUND_MESSAGE "${_xuexue_NOTFOUND_MESSAGE}Failed to find xuexue component \"${module}\" config file at \"${_xuexue_install_prefix}/xuexue${module}/xuexue${module}Config.cmake\"\n")
+        elseif(NOT xuexue_FIND_QUIETLY)
+            message(WARNING "Failed to find xuexue component \"${module}\" config file at \"${_xuexue_install_prefix}/xuexue${module}/xuexue${module}Config.cmake\"")
+        endif()
+    endif()
+
+    # For backward compatibility set the LIBRARIES variable
+    list(APPEND xuexue_LIBRARIES "xuexue::${module}")
+endforeach()
+
+# Restore the original CMAKE_PREFIX_PATH value
+set(CMAKE_PREFIX_PATH ${_xuexue_CMAKE_PREFIX_PATH_old})
+
+if (_xuexue_NOTFOUND_MESSAGE)
+    set(xuexue_NOT_FOUND_MESSAGE "${_xuexue_NOTFOUND_MESSAGE}")
+    set(xuexue_FOUND False)
+endif()
+
