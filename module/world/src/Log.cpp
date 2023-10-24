@@ -1,8 +1,6 @@
-//
-// Created by dx on 2023/10/23.
-//
-
+// #define DISABLE_DLOG_CFUN_MACRO
 #include "mumu/world/Log.h"
+
 #include <vector>
 
 namespace xuexue {
@@ -30,11 +28,11 @@ class Logger
     }
 
     /**
-     * 是否需要打日志
+     * 判断当前日志等级是否需要输出日志.
      * @param level
      * @return
      */
-    bool IsNeedLog(dlog_level level) const
+    bool IsNeedLog(log_level level) const
     {
         if (loggerCallback == nullptr) {
             return false;
@@ -45,7 +43,7 @@ class Logger
         return false;
     }
 
-    void Log(dlog_level level, const char* msg) const
+    void Log(log_level level, const char* msg) const
     {
         // 只执行回调
         loggerCallback(level, msg);
@@ -55,7 +53,7 @@ class Logger
     LoggerCallback loggerCallback = nullptr;
 
     // 默认等级门限
-    int levelThr = 2;
+    int levelThr = (int)log_level::debug;
 
   private:
     // 单例
@@ -66,7 +64,7 @@ Logger* Logger::m_pInstance = new Logger();
 /**
  * 设置回调函数指针进来
  */
-extern "C" DLOG_EXPORT void __cdecl log_set_logger_function(LoggerCallback fp)
+void LogUtil::SetLoggerFunction(LoggerCallback fp)
 {
     Logger::GetInst()->loggerCallback = fp;
 }
@@ -77,9 +75,9 @@ extern "C" DLOG_EXPORT void __cdecl log_set_logger_function(LoggerCallback fp)
  * @param  strFormat Describes the format to use.
  * @param  ...       Variable arguments providing additional information.
  */
-extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
+void LogUtil::Info(const char* strFormat, ...)
 {
-    if (!Logger::GetInst()->IsNeedLog(dlog_level::info)) {
+    if (!Logger::GetInst()->IsNeedLog(log_level::info)) {
         return;
     }
     std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -106,7 +104,7 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
         }
     }
     va_end(arg_ptr);
-    Logger::GetInst()->Log(dlog_level::info, buf.data());
+    Logger::GetInst()->Log(log_level::info, buf.data());
 }
 
 /**
@@ -115,9 +113,9 @@ extern "C" DLOG_EXPORT void __cdecl LogI(const char* strFormat, ...)
  * @param  strFormat Describes the format to use.
  * @param  ...       Variable arguments providing additional information.
  */
-extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
+void LogUtil::Warring(const char* strFormat, ...)
 {
-    if (!Logger::GetInst()->IsNeedLog(dlog_level::warn)) {
+    if (!Logger::GetInst()->IsNeedLog(log_level::warn)) {
         return;
     }
     std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -144,7 +142,7 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
         }
     }
     va_end(arg_ptr);
-    Logger::GetInst()->Log(dlog_level::warn, buf.data());
+    Logger::GetInst()->Log(log_level::warn, buf.data());
 }
 
 /**
@@ -153,9 +151,9 @@ extern "C" DLOG_EXPORT void __cdecl LogW(const char* strFormat, ...)
  * @param  strFormat Describes the format to use.
  * @param  ...       Variable arguments providing additional information.
  */
-extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
+void LogUtil::Error(const char* strFormat, ...)
 {
-    if (!Logger::GetInst()->IsNeedLog(dlog_level::err)) {
+    if (!Logger::GetInst()->IsNeedLog(log_level::err)) {
         return;
     }
     std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -182,7 +180,7 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
         }
     }
     va_end(arg_ptr);
-    Logger::GetInst()->Log(dlog_level::err, buf.data());
+    Logger::GetInst()->Log(log_level::err, buf.data());
 }
 
 /**
@@ -191,9 +189,9 @@ extern "C" DLOG_EXPORT void __cdecl LogE(const char* strFormat, ...)
  * @param  strFormat Describes the format to use.
  * @param  ...       Variable arguments providing additional information.
  */
-extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
+void LogUtil::Debug(const char* strFormat, ...)
 {
-    if (!Logger::GetInst()->IsNeedLog(dlog_level::debug)) {
+    if (!Logger::GetInst()->IsNeedLog(log_level::debug)) {
         return;
     }
     std::vector<char> buf(DEBUG_LOG_BUFF_SIZE, '\0');
@@ -220,7 +218,9 @@ extern "C" DLOG_EXPORT void __cdecl LogD(const char* strFormat, ...)
         }
     }
     va_end(arg_ptr);
-    Logger::GetInst()->Log(dlog_level::debug, buf.data());
+    Logger::GetInst()->Log(log_level::debug, buf.data());
 }
 
 } // namespace xuexue
+
+#undef DISABLE_DLOG_CFUN_MACRO

@@ -1,6 +1,7 @@
 //
 // Created by dx on 2023/10/23.
 //
+#pragma once
 
 #ifndef MUMU_MATH_H
 #define MUMU_MATH_H

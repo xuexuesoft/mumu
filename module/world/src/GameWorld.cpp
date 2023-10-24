@@ -4,19 +4,21 @@
 
 #include "mumu/world/GameWorld.h"
 #include "mumu/world/U3DDebugDraw.h"
-
-#define LogI printf
+#include "mumu/world/Log.h"
 
 namespace mumu {
 namespace world {
 
-extern U3DDebugDraw g_debugDraw;
-
 void GameWorld::Init()
 {
+    LogI("GameWorld.Init():执行初始化");
+
+    // new world
     b2Vec2 gravity;
     gravity.Set(0.0f, -10.0f);
     m_world = new b2World(gravity);
+
+    m_world->SetDebugDraw(U3DDebugDraw::Inst());
 
     memset(&m_maxProfile, 0, sizeof(b2Profile));
     memset(&m_totalProfile, 0, sizeof(b2Profile));
@@ -24,17 +26,18 @@ void GameWorld::Init()
     _settings.Reset();
 }
 
-void GameWorld::AddBodyCircle(float radius, float x, float y)
+void GameWorld::AddBodyCircle(float x, float y, float radius)
 {
+    LogI("GameWorld.AddBodyCircle():进入函数");
     b2CircleShape shape;
     shape.m_p.SetZero();
-    shape.m_radius = 0.1f;
+    shape.m_radius = radius;
 
     b2BodyDef bd;
     bd.type = b2_dynamicBody;
     bd.position = b2Vec2(x, y);
     b2Body* body = m_world->CreateBody(&bd);
-    body->CreateFixture(&shape, 0.01f);
+    body->CreateFixture(&shape, 0.01f); // 0.01f是密度
 
     // 记录id
     _mBodys[_curID++] = body;
@@ -42,11 +45,23 @@ void GameWorld::AddBodyCircle(float radius, float x, float y)
 
 void GameWorld::AddBodyBox(float hx, float hy, float x, float y)
 {
+    b2PolygonShape shape;
+    shape.SetAsBox(1.5f, 1.5f); // 使用一半长的x和一半长的y
+    b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.position.Set(-40.0f, 5.0f);
+    bd.bullet = true;
+    b2Body* body = m_world->CreateBody(&bd);
+    body->CreateFixture(&shape, 1.0f);
+    body->SetLinearVelocity(b2Vec2(10.0f, 0.0f));
+
+    LogI("GameWorld.AddBodyBox():进入函数");
 }
 
 void GameWorld::Step(GameWorld::Settings& settings)
 {
-    LogD("GameWorld.Step():进入函数...");
+    LogI("GameWorld.Step():进入函数...");
+    U3DDebugDraw& g_debugDraw = *U3DDebugDraw::Inst();
 
     float timeStep = settings.m_hertz > 0.0f ? 1.0f / settings.m_hertz : float(0.0f);
 

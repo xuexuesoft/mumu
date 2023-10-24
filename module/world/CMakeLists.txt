@@ -28,6 +28,9 @@ set(SUB_MODULE_NAME world)
 
 message(STATUS "${SUB_MODULE_NAME}编译目标文件: ${SRCS}")
 
+# 如果是共享库那么要定义这个,否则下面的设置target属性的时候会没有值.
+set(SHARED_LIBRARY_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR})
+
 # 目前直接从这个库导出
 add_library(${SUB_MODULE_NAME} SHARED ${SRCS})
 add_library(${PROJECT_NAME}::${SUB_MODULE_NAME} ALIAS ${SUB_MODULE_NAME})
@@ -36,8 +39,10 @@ add_library(${PROJECT_NAME}::${SUB_MODULE_NAME} ALIAS ${SUB_MODULE_NAME})
 set_target_properties(${SUB_MODULE_NAME}
         PROPERTIES
         LINKER_LANGUAGE CXX
-        VERSION ${SHARED_LIBRARY_VERSION} SOVERSION ${SHARED_LIBRARY_VERSION}
-        #        PUBLIC_HEADER ${HDRS_G} #上面的头文件里设置了文件属性,这里是否还可以再设置呢?如果设置了它,那么使用者似乎在根目录可以include
+        # 目前先不导出这个版本吧
+        #VERSION ${SHARED_LIBRARY_VERSION}
+        #SOVERSION ${SHARED_LIBRARY_VERSION}
+        #PUBLIC_HEADER ${HDRS_G} #上面的头文件里设置了文件属性,这里是否还可以再设置呢?如果设置了它,那么使用者似乎在根目录可以include
         OUTPUT_NAME "${PROJECT_NAME}${SUB_MODULE_NAME}" #输出mumuwrold
         DEFINE_SYMBOL MUMU_WORLD_EXPORTS
 )

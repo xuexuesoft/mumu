@@ -1,5 +1,6 @@
 #include <iostream>
 #include "mumu/world/Export.h"
+#include "mumu/world/Log.h"
 
 void mumu_test()
 {

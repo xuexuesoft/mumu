@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-#include "Log.h"
-
 namespace mumu {
 namespace world {
 
@@ -93,11 +91,11 @@ class GameWorld : public b2ContactListener
 
     /**
      * 添加一个圆形的动态Body
-     * @param radius
-     * @param x
-     * @param y
+     * @param x position.x
+     * @param y position.y
+     * @param radius 半径
      */
-    void AddBodyCircle(float radius, float x, float y);
+    void AddBodyCircle(float x, float y, float radius = 0.5f);
 
     void AddBodyBox(float hx, float hy, float x, float y);
 
@@ -137,7 +135,9 @@ class GameWorld : public b2ContactListener
     }
 
   protected:
+
     b2World* m_world;
+
     b2Profile m_maxProfile;
     b2Profile m_totalProfile;
     int32 m_stepCount;

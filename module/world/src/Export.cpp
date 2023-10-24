@@ -1,16 +1,25 @@
 #include <iostream>
 #include "mumu/world/Export.h"
 #include "mumu/world/U3DDebugDraw.h"
+#include "mumu/world/Log.h"
 
-MUMU_EXPORT PluginError mumu_set_logger(LoggerCallback fp)
+using namespace xuexue;
+
+namespace mumu {
+namespace world {
+
+MUMU_EXPORT PluginError mumu_set_logger(xuexue::LoggerCallback fp)
 {
-    log_set_logger_function(fp);
+    LogUtil::SetLoggerFunction(fp);
+    LogI("设置日志函数完成,尝试输出一条日志!");
     return PluginError::Ok;
 }
 
 MUMU_EXPORT PluginError mumu_world_create(GameWorld*& world)
 {
+    LogI("mumu_world_create():进入函数!");
     world = new GameWorld();
+    world->Init();
     return PluginError::Ok;
 }
 
@@ -26,5 +35,8 @@ MUMU_EXPORT PluginError mumu_world_step(GameWorld* world)
 
 MUMU_EXPORT PluginError mumu_set_debug_draw_interface(DebugDrawInterface& interface)
 {
-    g_debugDraw.SetInterface(interface);
+    U3DDebugDraw::Inst()->SetInterface(interface);
 }
+
+} // namespace world
+} // namespace mumu

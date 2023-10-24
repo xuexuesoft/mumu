@@ -1,11 +1,12 @@
 //
 // Created by dx on 2023/10/23.
 //
+#pragma once
 
 #ifndef MUMU_U3DDEBUGDRAW_H
-#define MUMU_U3DDEBUGDRAW_H
+#    define MUMU_U3DDEBUGDRAW_H
 
-#include "box2d/box2d.h"
+#    include "box2d/box2d.h"
 
 namespace mumu {
 namespace world {
@@ -36,11 +37,19 @@ struct DebugDrawInterface
     DrawAABBCallback OnDrawAABB = nullptr;
 };
 
+/**
+ * u3d调试绘图接口.
+ */
 class U3DDebugDraw : public b2Draw
 {
   public:
     U3DDebugDraw();
     virtual ~U3DDebugDraw();
+
+    static U3DDebugDraw* Inst()
+    {
+        return m_pInstance;
+    }
 
     void Create();
     void Destroy();
@@ -53,6 +62,7 @@ class U3DDebugDraw : public b2Draw
 
     void DrawCircle(const b2Vec2& center, float radius, const b2Color& color) override;
 
+    // 绘制实心圆
     void DrawSolidCircle(const b2Vec2& center, float radius, const b2Vec2& axis, const b2Color& color) override;
 
     void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) override;
@@ -75,10 +85,10 @@ class U3DDebugDraw : public b2Draw
     //    GLRenderTriangles* m_triangles;
 
   private:
+    static U3DDebugDraw* m_pInstance;
+
     DebugDrawInterface _interface;
 };
-
-extern U3DDebugDraw g_debugDraw;
 
 } // namespace world
 } // namespace mumu

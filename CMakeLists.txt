@@ -37,6 +37,12 @@ else ()
     message(FATAL_ERROR "Compiler does not support C++17.")
 endif ()
 
+
+# 设置macos的编译通用的
+set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "macOS编译通用的两种指令" FORCE)
+#set(CMAKE_SYSTEM_PROCESSOR "arm64;x86_64" CACHE STRING "" FORCE)
+
+
 # 测试相关
 option(ENABLE_TESTS "Set to OFF|ON (default is ON) 是否开启测试" ON)
 if (ENABLE_TESTS)
