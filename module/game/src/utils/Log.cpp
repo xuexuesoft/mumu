@@ -1,5 +1,5 @@
 // #define DISABLE_DLOG_CFUN_MACRO
-#include "mumu/world/Log.h"
+#include "mumu/utils/Log.h"
 
 #include <vector>
 
@@ -64,7 +64,7 @@ Logger* Logger::m_pInstance = new Logger();
 /**
  * 设置回调函数指针进来
  */
-void LogUtil::SetLoggerFunction(LoggerCallback fp)
+void LogUtil::SetLoggerCallback(LoggerCallback fp)
 {
     Logger::GetInst()->loggerCallback = fp;
 }
@@ -219,6 +219,11 @@ void LogUtil::Debug(const char* strFormat, ...)
     }
     va_end(arg_ptr);
     Logger::GetInst()->Log(log_level::debug, buf.data());
+}
+
+void LogUtil::SetOutputLevelThr(log_level thr)
+{
+    Logger::GetInst()->levelThr = (int)thr;
 }
 
 } // namespace xuexue

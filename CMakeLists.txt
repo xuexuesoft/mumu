@@ -21,7 +21,7 @@ message(STATUS "总工程${PROJECT_NAME}的PLATFORM = ${PLATFORM}")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # 加入功能性的宏
-include(PocoMacros)
+#include(PocoMacros)
 include(xuexueMacros)
 
 # 修复一下install文件夹路径
@@ -58,10 +58,9 @@ endif ()
 # 在windows平台定义dll或者库的后缀(这里我们目前用不上)
 #include(DefinePlatformSpecific)
 
-
-set(USE_EXTERNAL_DIR_LIB ON CACHE BOOL "使用external文件夹中的库(用于开发模式)=ON" FORCE)
-
-if (USE_EXTERNAL_DIR_LIB)
+# 配置是否使用自带的external文件夹中的库,如果是这样使用内部的库,那么不要执行install什么的,不然找不到项目里的其它库
+set(USE_INTERNAL_DEPENDENCY_LIB ON CACHE BOOL "使用内部自带的external文件夹中的库(用于开发模式)=ON" FORCE)
+if (USE_INTERNAL_DEPENDENCY_LIB)
     # 如果是这样的就直接把依赖库的源码添加进来,这是用于开发的模式
     add_subdirectory(external)
 else ()
@@ -72,7 +71,7 @@ else ()
     endif ()
 endif ()
 
-add_subdirectory(module/world)
+add_subdirectory(module/game)
 
 #install(TARGETS mumu)
 

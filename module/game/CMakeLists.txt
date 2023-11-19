@@ -1,38 +1,36 @@
-# Sources
-file(GLOB_RECURSE SRCS_G "src/**.cpp" "src/**.h" "src/**.hpp" "src/**.c" "src/**.cc")
-POCO_SOURCES_AUTO(SRCS ${SRCS_G})
+# 定义一个子模块名
+set(SUB_MODULE_NAME game)
 
-# Headers
-file(GLOB_RECURSE HDRS_G "include/**.h" "include/**.hpp")
-POCO_HEADERS_AUTO(SRCS ${HDRS_G})
+# 头文件
+file(GLOB_RECURSE INCLUDE_LIST "include/**.h" "include/**.hpp")
+assign_source_group(${CMAKE_CURRENT_SOURCE_DIR}/include/mumu ${INCLUDE_LIST})
 
-# Version Resource
-if (MSVC AND BUILD_SHARED_LIBS)
-    source_group("Resources" FILES ${PROJECT_SOURCE_DIR}/DLLVersion.rc)
-    list(APPEND SRCS ${PROJECT_SOURCE_DIR}/DLLVersion.rc)
+# 源文件
+file(GLOB_RECURSE SOURCE_LIST "src/**.cpp" "src/**.c" "src/**.h" "src/**.hpp")
+assign_source_group(${CMAKE_CURRENT_SOURCE_DIR}/src ${SOURCE_LIST})
+
+# 如果是win平台,加入windows平台的文件
+if (WIN32)
+    FILE(GLOB_RECURSE SOURCE_WIN_LIST "Win/**.cpp" "Win/**.h" "Win/**.hpp" "Win/**.c")
+    assign_source_group(${CMAKE_CURRENT_SOURCE_DIR} ${SOURCE_WIN_LIST})
+    list(APPEND SOURCE_LIST ${SOURCE_WIN_LIST})
 endif ()
 
-# 这个宏是根据平台不同来选则加入的源文件,这里我们不使用
-# POCO_SOURCES_AUTO_PLAT(SRCS WIN32
-# 	src/WinRegistryConfiguration.cpp
-# 	src/WinRegistryKey.cpp
-# 	src/WinService.cpp
-# )
+# dll.rc
+if (MSVC AND BUILD_SHARED_LIBS)
+    source_group("Resources" FILES ${PROJECT_SOURCE_DIR}/DLLVersion.rc)
+    list(APPEND SOURCE_LIST ${PROJECT_SOURCE_DIR}/DLLVersion.rc)
+endif ()
 
-# 把他们设置一个组,在vs下可能好看一些
-vs_assign_source_group(SRCS)
-
-
-# 定义一个子模块名
-set(SUB_MODULE_NAME world)
-
-message(STATUS "${SUB_MODULE_NAME}编译目标文件: ${SRCS}")
+# 把头文件也加进source去,这样在vs工程里可以更方便的显示
+list(APPEND SOURCE_LIST ${INCLUDE_LIST})
 
 # 如果是共享库那么要定义这个,否则下面的设置target属性的时候会没有值.
 set(SHARED_LIBRARY_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR})
 
+message(STATUS "${SUB_MODULE_NAME}编译目标文件: ${SOURCE_LIST}")
 # 目前直接从这个库导出
-add_library(${SUB_MODULE_NAME} SHARED ${SRCS})
+add_library(${SUB_MODULE_NAME} SHARED ${SOURCE_LIST})
 add_library(${PROJECT_NAME}::${SUB_MODULE_NAME} ALIAS ${SUB_MODULE_NAME})
 
 # 目标可以具有影响其构建方式的属性。
@@ -55,7 +53,7 @@ target_include_directories(${SUB_MODULE_NAME}
 )
 
 # 是否使用内部文件夹里的库
-if (USE_EXTERNAL_DIR_LIB)
+if (USE_INTERNAL_DEPENDENCY_LIB)
     # 如果是这样使用内部的库,那么不要执行install什么的,不然找不到项目里的其它库
     target_link_libraries(${SUB_MODULE_NAME} PUBLIC box2d)
 else ()

@@ -7,7 +7,7 @@ import os
 
 class mumuRecipe(ConanFile):
     name = "mumu"
-    version = "1.0"
+    version = "1.0.0"
     package_type = "library"
 
     # Optional metadata
@@ -37,8 +37,7 @@ class mumuRecipe(ConanFile):
 
     def log_work_fun(self, fun_name: str):
         # 记录输出一下函数名
-        print("{}包conan脚本:conan进入:{}()函数,当前的python工作目录为={}".format(
-            self.name, fun_name, os.getcwd()))
+        print("f{self.name}包conan脚本:conan进入:{fun_name}()函数,当前的python工作目录为={os.getcwd()}")
 
     def requirements(self):
         self.requires("gtest/1.14.0")

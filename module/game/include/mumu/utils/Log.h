@@ -20,12 +20,19 @@ typedef void (*LoggerCallback)(log_level level, const char* message);
 class LogUtil
 {
   public:
+
+    /**
+     * 设置输出日志的等级门限,这样可以减少格式化开销.
+     * @param thr
+     */
+    static void SetOutputLevelThr(log_level thr);
+
     /**
      * 设置一个外部对接其他日志系统的回调(如第三方控制台等等),注意每次close日志系统会清空这个设置,之后需要重新设置一次.
      *
      * @param  fp 函数指针.
      */
-    static void SetLoggerFunction(LoggerCallback fp);
+    static void SetLoggerCallback(LoggerCallback fp);
 
     /**
      * Logs an info.

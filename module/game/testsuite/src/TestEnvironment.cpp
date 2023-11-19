@@ -63,7 +63,7 @@ static void OnLogger(log_level level, const char* message)
 int main(int argc, char* argv[])
 {
     // 设置日志回调
-    xuexue::LogUtil::SetLoggerFunction(OnLogger);
+    xuexue::LogUtil::SetLoggerCallback(OnLogger);
 
     ::testing::InitGoogleTest(&argc, argv);
     // gtest takes ownership of the TestEnvironment ptr - we don't delete it.

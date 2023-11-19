@@ -2,9 +2,9 @@
 // Created by dx on 2023/10/23.
 //
 
-#include "mumu/world/GameWorld.h"
-#include "mumu/world/U3DDebugDraw.h"
-#include "mumu/world/Log.h"
+#include "mumu/testbed/GameWorld.h"
+#include "mumu/testbed/U3DDebugDraw.h"
+#include "mumu/utils/Log.h"
 
 namespace mumu {
 namespace world {
@@ -18,7 +18,7 @@ void GameWorld::Init()
     gravity.Set(0.0f, -10.0f);
     m_world = new b2World(gravity);
 
-    m_world->SetDebugDraw(U3DDebugDraw::Inst());
+    // m_world->SetDebugDraw(U3DDebugDraw::Inst());
 
     memset(&m_maxProfile, 0, sizeof(b2Profile));
     memset(&m_totalProfile, 0, sizeof(b2Profile));
@@ -45,6 +45,7 @@ void GameWorld::AddBodyCircle(float x, float y, float radius)
 
 void GameWorld::AddBodyBox(float hx, float hy, float x, float y)
 {
+    LogI("GameWorld.AddBodyBox():进入函数");
     b2PolygonShape shape;
     shape.SetAsBox(1.5f, 1.5f); // 使用一半长的x和一半长的y
     b2BodyDef bd;
@@ -54,13 +55,11 @@ void GameWorld::AddBodyBox(float hx, float hy, float x, float y)
     b2Body* body = m_world->CreateBody(&bd);
     body->CreateFixture(&shape, 1.0f);
     body->SetLinearVelocity(b2Vec2(10.0f, 0.0f));
-
-    LogI("GameWorld.AddBodyBox():进入函数");
 }
 
 void GameWorld::Step(GameWorld::Settings& settings)
 {
-    LogI("GameWorld.Step():进入函数...");
+    LogD("GameWorld.Step():进入函数...");
     U3DDebugDraw& g_debugDraw = *U3DDebugDraw::Inst();
 
     float timeStep = settings.m_hertz > 0.0f ? 1.0f / settings.m_hertz : float(0.0f);

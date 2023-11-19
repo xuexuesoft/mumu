@@ -1,6 +1,6 @@
 #include <iostream>
-#include "mumu/world/Export.h"
-#include "mumu/world/Log.h"
+// #include "mumu/world/Export.h"
+#include "mumu/utils/Log.h"
 
 void mumu_test()
 {
@@ -110,11 +110,4 @@ void mumu_test()
 #if __CYGWIN__
     std::cout << "  mumu/1.0: __CYGWIN__" << __CYGWIN__ << "\n";
 #endif
-}
-
-void mumu_print_vector(const std::vector<std::string> &strings)
-{
-    for (std::vector<std::string>::const_iterator it = strings.begin(); it != strings.end(); ++it) {
-        std::cout << "mumu/1.0 " << *it << std::endl;
-    }
 }

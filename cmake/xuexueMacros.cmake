@@ -211,3 +211,21 @@ macro(XUEXUE_INSTALL_PDB target_name)
         )
     endif ()
 endmacro()
+
+#===============================================================================
+# 这个函数在VS工程里生成一个文件路径,让vs编辑器里的目录更美观.
+# CUR_ROOT_DIR [in]: 文件路径的相对ROOT路径
+function(assign_source_group CUR_ROOT_DIR)
+    foreach (_source IN ITEMS ${ARGN})
+        if (IS_ABSOLUTE "${_source}")
+            # 给它一个相对目标
+            file(RELATIVE_PATH _source_rel "${CUR_ROOT_DIR}" "${_source}")
+        else ()
+            set(_source_rel "${_source}")
+        endif ()
+        get_filename_component(_source_path "${_source_rel}" PATH)
+        string(REPLACE "/" "\\" _source_path_msvc "${_source_path}")
+        #这个表示在VS里划分一个组
+        source_group("${_source_path_msvc}" FILES "${_source}")
+    endforeach ()
+endfunction(assign_source_group)
