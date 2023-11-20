@@ -24,10 +24,15 @@ MUMU_C_EXPORT PluginError SetLogger(xuexue::LoggerCallback fp);
 MUMU_C_EXPORT PluginError SetLogThr(xuexue::log_level thr);
 
 // 创建一个世界.
-MUMU_C_EXPORT PluginError WorldCreate(game::world::World*& world);
+MUMU_C_EXPORT PluginError CreateWorld(game::world::World*& world);
 
 // 执行一步计算.
 MUMU_C_EXPORT PluginError WorldStep(game::world::World* world);
+
+MUMU_C_EXPORT PluginError WorldAddTile(game::world::World* world, float x, float y, game::object::Object*& tile);
+MUMU_C_EXPORT PluginError WorldAddPlayer(game::world::World* world, float x, float y, game::object::Object*& player);
+
+MUMU_C_EXPORT PluginError ObjectGetPosition(game::object::Object* obj, b2Vec2& pos);
 
 // 设置绘图接口
 // MUMU_EXPORT PluginError mumu_set_debug_draw_interface(DebugDrawInterface& interface);

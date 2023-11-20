@@ -28,7 +28,7 @@ MUMU_C_EXPORT PluginError SetLogThr(xuexue::log_level thr)
     return PluginError::Ok;
 }
 
-MUMU_C_EXPORT PluginError WorldCreate(game::world::World*& world)
+MUMU_C_EXPORT PluginError CreateWorld(game::world::World*& world)
 {
     LogI("mumu_world_create():进入函数!");
     world = new game::world::World();
@@ -43,6 +43,36 @@ MUMU_C_EXPORT PluginError WorldStep(game::world::World* world)
     }
 
     world->Step();
+    return PluginError::Ok;
+}
+
+MUMU_C_EXPORT PluginError WorldAddTile(game::world::World* world, float x, float y, game::object::Object*& tile)
+{
+    if (world == nullptr) {
+        return PluginError::InvalidHandle;
+    }
+
+    tile = world->AddTile(x, y);
+    return PluginError::Ok;
+}
+
+MUMU_C_EXPORT PluginError WorldAddPlayer(game::world::World* world, float x, float y, game::object::Object*& player)
+{
+    if (world == nullptr) {
+        return PluginError::InvalidHandle;
+    }
+
+    player = world->AddPlayer(x, y);
+    return PluginError::Ok;
+}
+
+MUMU_C_EXPORT PluginError ObjectGetPosition(game::object::Object* obj, b2Vec2& pos)
+{
+    if (obj == nullptr) {
+        return PluginError::InvalidHandle;
+    }
+
+    obj->GetWorldPostion(pos);
     return PluginError::Ok;
 }
 

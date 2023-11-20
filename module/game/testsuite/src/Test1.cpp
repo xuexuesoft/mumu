@@ -7,22 +7,41 @@
 #include "mumu/export/Export.h"
 #include "mumu/testbed/GameWorld.h"
 
+#include "mumu/game/world/World.h"
+
 #include <thread>
 #include <chrono>
 
 using namespace std;
-using namespace mumu::world;
 
-GameWorld world;
-
-TEST(world, Init)
+TEST(GameWorld, Init)
 {
-    world.Init();
+    using namespace mumu::world;
+    GameWorld* world = new GameWorld();
+    world->Init();
     for (int i = 0; i < 10; ++i) {
-        world.AddBodyCircle(i, 0);
+        world->AddBodyCircle(i, 0);
     }
 
-    for (int i = 0; i < 1000; ++i) {
+    for (int i = 0; i < 50; ++i) {
+        world->Step();
+        this_thread::sleep_for(chrono::milliseconds(10));
+    }
+    delete world;
+}
+
+TEST(World, Init)
+{
+    using namespace mumu::game::world;
+    World world;
+    world.Init();
+    for (int x = -50; x < 50; x++) {
+        for (int y = -50; y < 50; y++) {
+            world.AddTile(x, y);
+        }
+    }
+
+    for (int i = 0; i < 100; ++i) {
         world.Step();
         this_thread::sleep_for(chrono::milliseconds(10));
     }

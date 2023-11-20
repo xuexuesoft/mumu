@@ -2,13 +2,20 @@
 
 #include "Settings.h"
 
-#include "mumu/game/object/Object.h"
+#include "mumu/game/object/ObjectManager.h"
 
 #include "box2d/box2d.h"
 
 #include <map>
 #include <string>
 #include <vector>
+
+#ifdef _WIN32
+#    define MUMU_CPP_EXPORT __declspec(dllexport)
+#else
+// 在Linux上没有stdcall
+#    define MUMU_CPP_EXPORT __attribute__((visibility("default")))
+#endif
 
 namespace mumu {
 namespace game {
@@ -17,7 +24,7 @@ namespace world {
 /**
  * 直接定义一个游戏世界.
  */
-class World
+class MUMU_CPP_EXPORT World
 {
   public:
     // 物理世界
@@ -28,6 +35,9 @@ class World
 
     // 这个世界的设置.
     Settings settings;
+
+    // 物体管理器
+    object::ObjectManager _objManager;
 
     /**
      * 初始化.
@@ -40,23 +50,73 @@ class World
         _world = new b2World(gravity);
 
         settings.Reset();
-        //        m_bomb = NULL;
-        //        m_textLine = 30;
-        //        m_textIncrement = 18;
-        //        m_mouseJoint = NULL;
-        //        m_pointCount = 0;
+        // m_bomb = NULL;
+        // m_textLine = 30;
+        // m_textIncrement = 18;
+        // m_mouseJoint = NULL;
+        // m_pointCount = 0;
         //
-        //        m_destructionListener.test = this;
-        //        m_world->SetDestructionListener(&m_destructionListener);
-        //        m_world->SetContactListener(this);
-        //        m_world->SetDebugDraw(&g_debugDraw);
+        // m_destructionListener.test = this;
+        // m_world->SetDestructionListener(&m_destructionListener);
+        // m_world->SetContactListener(this);
+        // m_world->SetDebugDraw(&g_debugDraw);
     }
 
     /**
-     * 添加一个瓦片
+     * @brief 得到所有的物体.这个函数待定.
      */
-    void AddTile()
+    void GetAllObject()
     {
+        int bodyCount = _world->GetBodyCount();
+        _world->GetBodyList();
+    }
+
+    /**
+     * @brief 向世界中添加一个瓦片.
+     * @param x
+     * @param y
+     * @return
+     */
+    object::Object* AddTile(float x, float y)
+    {
+        b2PolygonShape shape;
+        shape.SetAsBox(0.5f, 0.5f); // 使用一半长的x和一半长的y
+        b2BodyDef bd;
+        bd.type = b2_staticBody;
+        bd.position = b2Vec2(x, y);
+        object::Object* obj = _objManager.CreateObject(object::Type::Tile);
+        bd.userData.pointer = (uintptr_t)obj;
+
+        b2Body* body = _world->CreateBody(&bd);
+        body->CreateFixture(&shape, 1.0f); // 1.0f是密度
+
+        // 记录这个body指针
+        obj->body = body;
+        return obj;
+    }
+
+    /**
+     * @brief 向世界中添加一个player.
+     * @param x
+     * @param y
+     * @return
+     */
+    object::Object* AddPlayer(float x, float y)
+    {
+        b2PolygonShape shape;
+        shape.SetAsBox(0.5f, 0.5f); // 使用一半长的x和一半长的y
+        b2BodyDef bd;
+        bd.type = b2_dynamicBody;
+        bd.position = b2Vec2(x, y);
+        object::Object* obj = _objManager.CreateObject(object::Type::Player);
+        bd.userData.pointer = (uintptr_t)obj;
+
+        b2Body* body = _world->CreateBody(&bd);
+        body->CreateFixture(&shape, 1.0f); // 1.0f是密度
+
+        // 记录这个body指针
+        obj->body = body;
+        return obj;
     }
 
     /**

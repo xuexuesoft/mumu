@@ -27,6 +27,11 @@ include(xuexueMacros)
 # 修复一下install文件夹路径
 xuexue_set_cmake_default_dir()
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+# Windows DLLs are "runtime" for CMake. Output them to "bin" like the Visual Studio projects do.
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # 设置C++17吧
 include(CXX1x)
 check_for_cxx17_compiler(CXX17_COMPILER)

@@ -62,6 +62,10 @@ static void OnLogger(log_level level, const char* message)
 
 int main(int argc, char* argv[])
 {
+#if _WIN32
+    system("chcp 65001");
+#endif
+
     // 设置日志回调
     mumu::api::SetLogger(OnLogger);
 
