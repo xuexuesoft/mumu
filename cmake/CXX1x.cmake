@@ -80,7 +80,7 @@ macro(check_for_cxx17_compiler _VAR)
             message(STATUS "To enable C++17 install libc++ standard library from https://libcxx.llvm.org/")
         endif ()
     endif ()
-    if (_COMPILER_TEST_RESULT AND ((MSVC AND (MSVC17)) OR
+    if (_COMPILER_TEST_RESULT AND ((MSVC AND (MSVC14 OR MSVC15 OR MSVC16 OR MSVC17)) OR
     (CMAKE_COMPILER_IS_GNUCXX AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.9.2) OR
     (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 3.4) OR
     (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")))

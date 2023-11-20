@@ -30,7 +30,7 @@ target_include_directories(${TEST_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 
-if (USE_EXTERNAL_DIR_LIB)
+if (USE_INTERNAL_DEPENDENCY_LIB)
     target_link_libraries(${TEST_NAME} PRIVATE gtest gtest_main ${SUB_MODULE_NAME} ${CMAKE_THREAD_LIBS_INIT})
     # 可能需要gtest头文件
     include_directories("${gtest_SOURCE_DIR}/include" "${gmock_SOURCE_DIR}/include")

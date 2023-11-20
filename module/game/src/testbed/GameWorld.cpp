@@ -1,8 +1,4 @@
-//
-// Created by dx on 2023/10/23.
-//
-
-#include "mumu/testbed/GameWorld.h"
+﻿#include "mumu/testbed/GameWorld.h"
 #include "mumu/testbed/U3DDebugDraw.h"
 #include "mumu/utils/Log.h"
 

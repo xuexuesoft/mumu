@@ -1,10 +1,17 @@
-#pragma once
+﻿#pragma once
 
 #include "box2d/box2d.h"
 
 #include <map>
 #include <string>
 #include <vector>
+
+#ifdef _WIN32
+#    define MUMU_CPP_EXPORT __declspec(dllexport)
+#else
+// 在Linux上没有stdcall
+#    define MUMU_CPP_EXPORT __attribute__((visibility("default")))
+#endif
 
 namespace mumu {
 namespace world {
@@ -23,7 +30,7 @@ struct ContactPoint
 
 const int32 k_maxContactPoints = 2048;
 
-class GameWorld : public b2ContactListener
+class MUMU_CPP_EXPORT GameWorld : public b2ContactListener
 {
   public:
     struct Settings
@@ -135,7 +142,6 @@ class GameWorld : public b2ContactListener
     }
 
   protected:
-
     b2World* m_world;
 
     b2Profile m_maxProfile;

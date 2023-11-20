@@ -1,8 +1,8 @@
 ﻿#include "gtest/gtest.h"
 #include <chrono>
 
-#include "mumu/world/Export.h"
-#include "mumu/world/Log.h"
+#include "mumu/export/Export.h"
+#include "mumu/testbed/GameWorld.h"
 
 // 来自: https://stackoverflow.com/questions/30593762/how-to-initialize-constant-string-for-multiple-tests-in-google-test
 
@@ -63,7 +63,7 @@ static void OnLogger(log_level level, const char* message)
 int main(int argc, char* argv[])
 {
     // 设置日志回调
-    xuexue::LogUtil::SetLoggerCallback(OnLogger);
+    mumu::api::SetLogger(OnLogger);
 
     ::testing::InitGoogleTest(&argc, argv);
     // gtest takes ownership of the TestEnvironment ptr - we don't delete it.

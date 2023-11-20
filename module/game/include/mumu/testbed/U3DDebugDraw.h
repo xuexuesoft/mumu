@@ -1,12 +1,16 @@
-//
-// Created by dx on 2023/10/23.
-//
-#pragma once
+﻿#pragma once
 
 #ifndef MUMU_U3DDEBUGDRAW_H
 #    define MUMU_U3DDEBUGDRAW_H
 
 #    include "box2d/box2d.h"
+
+#    ifdef _WIN32
+#        define MUMU_CPP_EXPORT __declspec(dllexport)
+#    else
+// 在Linux上没有stdcall
+#        define MUMU_CPP_EXPORT __attribute__((visibility("default")))
+#    endif
 
 namespace mumu {
 namespace world {
@@ -40,7 +44,7 @@ struct DebugDrawInterface
 /**
  * u3d调试绘图接口.
  */
-class U3DDebugDraw : public b2Draw
+class MUMU_CPP_EXPORT U3DDebugDraw : public b2Draw
 {
   public:
     U3DDebugDraw();

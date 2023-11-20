@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
 namespace mumu {
-namespace game {
+namespace api {
 
 /**
  * 插件错误
@@ -28,5 +28,5 @@ enum class PluginError
     OperationFailed = 16,
     InvalidAttribute = 17,
 };
-} // namespace game
+} // namespace api
 } // namespace mumu

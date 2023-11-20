@@ -1,7 +1,7 @@
-// #define DISABLE_DLOG_CFUN_MACRO
-#include "mumu/utils/Log.h"
+﻿#include "mumu/utils/Log.h"
 
 #include <vector>
+#include <cstdarg>
 
 namespace xuexue {
 
@@ -19,6 +19,9 @@ namespace xuexue {
 // 一条日志的默认预估长度
 #define DEBUG_LOG_BUFF_SIZE 128
 
+/**
+ * @brief 内部的日志实例.
+ */
 class Logger
 {
   public:
@@ -45,7 +48,7 @@ class Logger
 
     void Log(log_level level, const char* msg) const
     {
-        // 只执行回调
+        // 只执行回调,如果这个系统没有对接一个日志系统,那么不会有输出.
         loggerCallback(level, msg);
     }
 
@@ -227,5 +230,3 @@ void LogUtil::SetOutputLevelThr(log_level thr)
 }
 
 } // namespace xuexue
-
-#undef DISABLE_DLOG_CFUN_MACRO

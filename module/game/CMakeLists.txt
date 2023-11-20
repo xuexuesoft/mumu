@@ -41,7 +41,7 @@ set_target_properties(${SUB_MODULE_NAME}
         #VERSION ${SHARED_LIBRARY_VERSION}
         #SOVERSION ${SHARED_LIBRARY_VERSION}
         #PUBLIC_HEADER ${HDRS_G} #上面的头文件里设置了文件属性,这里是否还可以再设置呢?如果设置了它,那么使用者似乎在根目录可以include
-        OUTPUT_NAME "${PROJECT_NAME}${SUB_MODULE_NAME}" #输出mumuwrold
+        OUTPUT_NAME "${PROJECT_NAME}${SUB_MODULE_NAME}" #输出mumugame
         DEFINE_SYMBOL MUMU_WORLD_EXPORTS
 )
 
